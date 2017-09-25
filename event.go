@@ -216,6 +216,10 @@ func NewEventFromUntrustedJSON(eventJSON []byte) (result Event, err error) {
 	}
 
 	if err = result.CheckFields(); err != nil {
+		err = fmt.Errorf(
+			"gomatrixserverlib: Event %s failed validation: %v",
+			result.fields.EventID, err,
+		)
 		return
 	}
 
