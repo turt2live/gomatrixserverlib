@@ -58,7 +58,7 @@ func (ac *FederationClient) doRequest(ctx context.Context, r FederationRequest, 
 
 	contents, err := ioutil.ReadAll(res.Body)
 
-	logger.Infof("Response %i from %s %s", res.StatusCode, req.Method, req.URL)
+	logger.Infof("Response %d from %s %s", res.StatusCode, req.Method, req.URL)
 
 	if res.StatusCode/100 != 2 { // not 2xx
 		// Adapted from https://github.com/matrix-org/gomatrix/blob/master/client.go
