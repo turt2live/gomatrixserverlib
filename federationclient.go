@@ -34,7 +34,7 @@ func NewFederationClient(
 }
 
 func (ac *FederationClient) doRequest(ctx context.Context, r FederationRequest, resBody interface{}) error {
-	reqID := "o-" + RandomString(12)
+	reqID := "o-" + util.RandomString(12)
 	logger := util.GetLogger(ctx).WithField("server", r.fields.Destination).WithField("out.req.ID", reqID)
 
 	if err := r.Sign(ac.serverName, ac.serverKeyID, ac.serverPrivateKey); err != nil {
