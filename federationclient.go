@@ -34,7 +34,7 @@ func NewFederationClient(
 }
 
 func (ac *FederationClient) doRequest(ctx context.Context, r FederationRequest, resBody interface{}) error {
-	reqID := "o-" + util.RandomString(12)
+	reqID := util.RandomString(12)
 	logger := util.GetLogger(ctx).WithField("server", r.fields.Destination).WithField("out.req.ID", reqID)
 
 	if err := r.Sign(ac.serverName, ac.serverKeyID, ac.serverPrivateKey); err != nil {
@@ -46,7 +46,7 @@ func (ac *FederationClient) doRequest(ctx context.Context, r FederationRequest, 
 		return err
 	}
 
-	logger.Info("Sending request %s %s", r.fields.Method, r.fields.RequestURI)
+	logger.Infof("Sending request %s %s", req.Method, req.URL)
 	res, err := ac.client.Do(req.WithContext(ctx))
 	if res != nil {
 		defer res.Body.Close() // nolint: errcheck
@@ -58,7 +58,7 @@ func (ac *FederationClient) doRequest(ctx context.Context, r FederationRequest, 
 
 	contents, err := ioutil.ReadAll(res.Body)
 
-	logger.Info("Got response %i from %s %s", res.StatusCode, r.fields.Method, r.fields.RequestURI)
+	logger.Infof("Response %i from %s %s", res.StatusCode, req.Method, req.URL)
 
 	if res.StatusCode/100 != 2 { // not 2xx
 		// Adapted from https://github.com/matrix-org/gomatrix/blob/master/client.go
