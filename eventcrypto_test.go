@@ -20,6 +20,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"sort"
 	"testing"
 
 	"golang.org/x/crypto/ed25519"
@@ -350,6 +351,8 @@ func TestVerifyEventSignaturesForInvite(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	servers := []string{}
+
 	for i, rq := range verifier.requests {
 		if !bytes.Equal(rq.Message, wantContent) {
 			t.Errorf("Verify content %d: got %s, want %s", i, rq.Message, wantContent)
@@ -357,15 +360,14 @@ func TestVerifyEventSignaturesForInvite(t *testing.T) {
 		if rq.AtTS != 123456 {
 			t.Errorf("Verify time %d: got %d, want %d", i, rq.AtTS, 123456)
 		}
+		servers = append(servers, string(rq.ServerName))
 	}
 
-	rq0 := verifier.requests[0]
-	if rq0.ServerName != "aliceserver" {
-		t.Errorf("Verify server 0: got %s, want %s", rq0.ServerName, "aliceserver")
+	sort.Strings(servers)
+	if servers[0] != "aliceserver" {
+		t.Errorf("Verify server 0: got %s, want %s", servers[0], "aliceserver")
 	}
-
-	rq1 := verifier.requests[1]
-	if rq1.ServerName != "bobserver" {
-		t.Errorf("Verify server 1: got %s, want %s", rq1.ServerName, "bobserver")
+	if servers[1] != "bobserver" {
+		t.Errorf("Verify server 1: got %s, want %s", servers[1], "bobserver")
 	}
 }
