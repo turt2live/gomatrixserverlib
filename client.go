@@ -257,6 +257,7 @@ func (fc *Client) doHttpRequest(ctx context.Context, req *http.Request) (*http.R
 	logger.Infof("Sending request %s %s", req.Method, req.URL)
 	resp, err := fc.client.Do(req.WithContext(ctx))
 	if err != nil {
+		logger.Infof("Request %s %s failed with %v", req.Method, req.URL, err)
 		return nil, err
 	}
 

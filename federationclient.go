@@ -46,13 +46,14 @@ func (ac *FederationClient) doRequest(ctx context.Context, r FederationRequest, 
 		return err
 	}
 
-	logger.Infof("Sending request %s %s", req.Method, req.URL)
+	logger.Infof("Outgoing request %s %s", req.Method, req.URL)
 	res, err := ac.client.Do(req.WithContext(ctx))
 	if res != nil {
 		defer res.Body.Close() // nolint: errcheck
 	}
 
 	if err != nil {
+		logger.Infof("Outgoing request %s %s failed with %v", req.Method, req.URL, err)
 		return err
 	}
 
